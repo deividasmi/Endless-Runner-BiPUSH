@@ -18,16 +18,28 @@ public class PlatformGenerator : MonoBehaviour {
 	private float[] platformWidths;
 
 
+	private float minHeight;
+	public Transform maxHeightPoint;
+	private float maxHeight;
+	public float maxHeightChange;
+	private float heightChange;
+
+	/*private CoinGenerator theCoinGenerator; 
+	public float randomCoinTreshold;
+	*/
+
 
 
 	// Use this for initialization
 	void Start () {
-		platformWidth = thePlatform.GetComponent<BoxCollider2D> ().size.x;
+		//platformWidth = thePlatform.GetComponent<BoxCollider2D> ().size.x;
 		platformWidths = new float[theObjectPools.Length];
 		for (int i = 0; i < theObjectPools.Length; i++) {
 			platformWidths [i] = theObjectPools[i].pooledObject.GetComponent<BoxCollider2D> ().size.x;
 			//platformWidths [i] = theObjectPools [i].pooledObject.gameObject.GetComponentInChildren<BoxCollider2D> ().size.x;
 		}
+		minHeight = transform.position.y;
+		maxHeight = maxHeightPoint.transform.position.y;
 	}
 
 	// Update is called once per frame
@@ -38,8 +50,18 @@ public class PlatformGenerator : MonoBehaviour {
 			distanceBetween = Random.Range (distanceBtwMin, distanceBtwMax);
 			platformSelector = Random.Range (0, theObjectPools.Length);
 
-			transform.position = new Vector3 (transform.position.x + (platformWidths[platformSelector]/2) + distanceBetween, transform.position.y, transform.position.z);
+			heightChange = transform.position.y + Random.Range (-maxHeightChange, maxHeightChange);
 
+
+			if (heightChange > maxHeight) {
+				heightChange = maxHeight;
+			}else if(heightChange<minHeight){
+				heightChange = minHeight;
+			}
+
+			Debug.Log(heightChange);
+			transform.position = new Vector3 (transform.position.x + (platformWidths[platformSelector]/2) + distanceBetween, heightChange, transform.position.z);
+			//Debug.Log (transform.position.x + (platformWidths [platformSelector] / 2) + distanceBetween);
 
 
 
