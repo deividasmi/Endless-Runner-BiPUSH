@@ -18,6 +18,9 @@ public class PlayerControler : MonoBehaviour {
 
 	private Rigidbody2D myRigidBody;
 
+	private bool stoppedJumping; // jump fix dont know if needed 
+	private bool canDoubleJump = true;
+
 	public bool grounded;
 	public LayerMask whatIsGround;
 	private Collider2D myCollider;
@@ -26,6 +29,9 @@ public class PlayerControler : MonoBehaviour {
 	public Transform groundPos;
 
 	public GameManager theGameManager;
+
+	public AudioSource jumpSound;
+	public AudioSource deathSound;
 
 	// Use this for initialization
 	void Start () {
@@ -37,6 +43,7 @@ public class PlayerControler : MonoBehaviour {
 		moveSpeedStore = moveSpeed;
 		speedMilestoneCountStore = speedMilestoneCount;
 		speedMilestoneStore = speedMilestone;
+		stoppedJumping = true; // jump fix 1.1
 	}
 
 	
@@ -54,13 +61,25 @@ public class PlayerControler : MonoBehaviour {
 		
 		myRigidBody.velocity = new Vector2 (moveSpeed, myRigidBody.velocity.y);
 
+		//jumping and double junping
 		if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) ){
 			if (grounded) {
 				myRigidBody.velocity = new Vector2 (myRigidBody.velocity.x, jumpForce);
+				stoppedJumping = false; //jump fix 1.1
+				canDoubleJump = true;
+				jumpSound.Play ();
+			}
+
+			if (!grounded && canDoubleJump) {
+				myRigidBody.velocity = new Vector2 (myRigidBody.velocity.x, jumpForce);
+				jumpTimeCounter = jumpTime;
+				stoppedJumping = false; //jump fix 1.1
+				canDoubleJump = false;
+				jumpSound.Play ();
 			}
 		}
 
-		if (Input.GetKey (KeyCode.Space) || Input.GetMouseButton (0)) {
+		if ((Input.GetKey (KeyCode.Space) || Input.GetMouseButton (0)) && !stoppedJumping) { //&& !stoppedJumping fix 1.1
 			if (jumpTimeCounter > 0) {
 				myRigidBody.velocity = new Vector2 (myRigidBody.velocity.x, jumpForce);
 				jumpTimeCounter -= Time.deltaTime;
@@ -69,9 +88,11 @@ public class PlayerControler : MonoBehaviour {
 
 		if (Input.GetKeyUp (KeyCode.Space) || Input.GetMouseButtonUp (0)) {
 			jumpTimeCounter = 0;
+			stoppedJumping = true; // jump fix 1.1
 		}
 		if (grounded) {
 			jumpTimeCounter = jumpTime;
+			canDoubleJump = true;
 		}
 
 		myAnimator.SetFloat ("Speed",myRigidBody.velocity.x);
@@ -81,6 +102,7 @@ public class PlayerControler : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other){
 		if (other.gameObject.tag == "killbox") {
+			deathSound.Play ();
 			theGameManager.RestartGame ();
 			moveSpeed = moveSpeedStore;
 			speedMilestoneCount = speedMilestoneCountStore;

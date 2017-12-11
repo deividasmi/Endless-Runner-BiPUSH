@@ -51,10 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AudioController.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\CoinGenerator.cs" />
      <Compile Include="Assets\Scripts\DeathMenu.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\LoginMenu.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\ObjectPooler.cs" />
      <Compile Include="Assets\Scripts\PauseMenu.cs" />
@@ -64,7 +66,11 @@
      <Compile Include="Assets\Scripts\PlayerControler.cs" />
      <Compile Include="Assets\Scripts\PowerupManager.cs" />
      <Compile Include="Assets\Scripts\PowerUps.cs" />
+     <Compile Include="Assets\Scripts\Registration.cs" />
+     <Compile Include="Assets\Scripts\ReportMenu.cs" />
      <Compile Include="Assets\Scripts\ScoreManager.cs" />
+     <Compile Include="Assets\Scripts\ScrollingBackground.cs" />
+     <Compile Include="Assets\Scripts\UserData.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

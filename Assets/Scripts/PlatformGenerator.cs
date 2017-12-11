@@ -24,10 +24,15 @@ public class PlatformGenerator : MonoBehaviour {
 	public float maxHeightChange;
 	private float heightChange;
 
-	/*private CoinGenerator theCoinGenerator; 
+	private CoinGenerator theCoinGenerator; 
 	public float randomCoinTreshold;
-	*/
 
+	public float randomSpikeTreshold;
+	public ObjectPooler spikePool;
+
+	public float powerUpHeight;
+	public ObjectPooler powerUpPool;
+	public float powerUpTreshold;
 
 
 	// Use this for initialization
@@ -40,6 +45,7 @@ public class PlatformGenerator : MonoBehaviour {
 		}
 		minHeight = transform.position.y;
 		maxHeight = maxHeightPoint.transform.position.y;
+		theCoinGenerator = FindObjectOfType<CoinGenerator> ();
 	}
 
 	// Update is called once per frame
@@ -59,7 +65,14 @@ public class PlatformGenerator : MonoBehaviour {
 				heightChange = minHeight;
 			}
 
-			Debug.Log(heightChange);
+			//powerUpGeneration
+			if(Random.Range (0f,100f) < powerUpTreshold){
+				GameObject newPowerUp = powerUpPool.GetPooledObject ();
+				newPowerUp.transform.position = transform.position + new Vector3 (distanceBetween / 2f, Random.Range (1f, powerUpHeight), 0f);
+				newPowerUp.SetActive (true);
+			}
+
+			//Debug.Log(heightChange);
 			transform.position = new Vector3 (transform.position.x + (platformWidths[platformSelector]/2) + distanceBetween, heightChange, transform.position.z);
 			//Debug.Log (transform.position.x + (platformWidths [platformSelector] / 2) + distanceBetween);
 
@@ -71,6 +84,23 @@ public class PlatformGenerator : MonoBehaviour {
 			newPlatform.transform.rotation = transform.rotation;
 			newPlatform.SetActive (true);
 
+			if (Random.Range (0f, 100) < randomCoinTreshold) {
+				theCoinGenerator.SpawnsCoins (new Vector3 (transform.position.x , transform.position.y + 3f, transform.position.z));
+			}
+
+			if (Random.Range (0f, 100) < randomSpikeTreshold) {
+				if (platformWidths [platformSelector] > 3f) {
+					GameObject newSpike = spikePool.GetPooledObject ();
+					float spikeXPosition = Random.Range (-platformWidths [platformSelector] / 2f + 1.25f, platformWidths [platformSelector] / 2f - 1.25f);
+					Vector3 spikePosition = new Vector3 (spikeXPosition, 0.5f, 0f);
+
+					newSpike.transform.position = transform.position + spikePosition;
+					Debug.Log ("Spike y: " + (newSpike.transform.position.y - transform.position.y));
+					newSpike.transform.rotation = transform.rotation;
+					newSpike.SetActive (true);
+				}
+
+			}
 			transform.position = new Vector3 (transform.position.x + (platformWidths[platformSelector]/2), transform.position.y, transform.position.z);
 
 		}
