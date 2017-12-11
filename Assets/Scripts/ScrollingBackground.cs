@@ -49,7 +49,7 @@ public class ScrollingBackground : MonoBehaviour {
 	}
 	
 	private void ScrollRight(){
-		int lastLeft = leftIndex;
+		//int lastLeft = leftIndex;
 		//layers [leftIndex].position = Vector3.right * (layers [rightIndex].position.x + backgroundSize);
 		layers [leftIndex].position = new Vector3 (layers [rightIndex].position.x + backgroundSize, fixedY, transform.position.z);
 		//Debug.Log("layers pos y " + layers[leftIndex].position.y + " camera :" + cameraTransform.position.y);

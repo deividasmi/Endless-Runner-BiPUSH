@@ -19,20 +19,18 @@ public class GameManager : MonoBehaviour {
 	public bool powerUpReset;
 	public bool backroundReset;
 	public ScrollingBackground[] theBackgrounds;
-	private string time;
+	private string time; 
+	//private string scoredbURL = "http://localhost/Endless_Runner/commitScore.php";
+    private string scoredbURL = "http://193.219.91.103:3089/commitScore.php";
 
 
-	//public ScrollingBackground background;
-	//private Vector3 backgroundStartPoint;
 
-	// Use this for initialization
-	void Start () {
+    void Start () {
 		platformStartPoint = platformGenerator.position;
 		playerStartPoint = thePlayer.transform.position;
 		theScoreManager = FindObjectOfType<ScoreManager> ();
-		//backgroundStartPoint = background.transform.position;
-		//Debug.Log (backgroundStartPoint.x + " ::: " + backgroundStartPoint.y);
 		theBackgrounds = FindObjectsOfType<ScrollingBackground> ();
+		theUserData = FindObjectOfType<UserData> ();
 	}
 	
 	// Update is called once per frame
@@ -45,7 +43,6 @@ public class GameManager : MonoBehaviour {
 		theScoreManager.scoreIncreasing = false;
 		thePlayer.gameObject.SetActive (false);
 		theDeathMenu.gameObject.SetActive (true);
-		//StartCoroutine ("RestartGameCo");
 	}
 
 	public void Reset(){
@@ -59,15 +56,15 @@ public class GameManager : MonoBehaviour {
 		thePlayer.transform.position = playerStartPoint;
 		platformGenerator.position = platformStartPoint;
 		thePlayer.gameObject.SetActive (true);
-		theScoreManager.scoreCount = 0;
-		theScoreManager.scoreIncreasing = true;
-		time = DateTime.Now.ToString ("yyyy-MM-dd HH:mm:ss");
-		powerUpReset = true;
 		backroundReset = true;
 		backgroundReset ();
-		//Debug.Log (background.transform.position.x + " ::: " + background.transform.position.y);
-		//background.transform.position = backgroundStartPoint;
-		//Debug.Log (background.transform.position.x + " ::: " + background.transform.position.y);
+		SendScore ();
+		theScoreManager.scoreCount = 0;
+        theScoreManager.scoreIncreasing = true;
+		time = DateTime.Now.ToString ("yyyy-MM-dd HH:mm:ss");
+		powerUpReset = true;
+
+	
 	}
 
 	private void backgroundReset(){
@@ -76,22 +73,33 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	/*public IEnumerator RestartGameCo(){
+	public void SendScore(){
+        try
+        {
+            if(theUserData.isLogedIn){
+			    int score = (int)Mathf.Round (theScoreManager.scoreCount);
+			    StartCoroutine (CommitScore(theUserData.userID, score));
+		    }
+        }
+        catch
+        {
+            Debug.Log("User data is null, user probably skipped loggin");
+        }
+		
+	
+	}
 
-		theScoreManager.scoreIncreasing = false;
-		thePlayer.gameObject.SetActive (false);
-		yield return new WaitForSeconds (0.5f);
+	IEnumerator CommitScore (int id, int score){
+		WWWForm form = new WWWForm ();
+		form.AddField ("idPost", id);
+		form.AddField ("scorePost",score);
+		time = DateTime.Now.ToString ("yyyy-mm-dd HH:mm:ss");
+		WWW www = new WWW (scoredbURL, form);
+		yield return www;
+        Debug.Log(www.text);
+        Debug.Log(time);
+	}
 
-		platformList = FindObjectsOfType<PlatformDestroyer> ();
-		for (int i = 0; i < platformList.Length; i++) {
-			platformList [i].gameObject.SetActive (false);
-		}
 
-		thePlayer.transform.position = playerStartPoint;
-		platformGenerator.position = platformStartPoint;
-		thePlayer.gameObject.SetActive (true);
-		theScoreManager.scoreCount = 0;
-		theScoreManager.scoreIncreasing = true;
 
-	}*/
 }

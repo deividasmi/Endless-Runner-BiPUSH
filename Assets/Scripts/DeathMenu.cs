@@ -12,7 +12,10 @@ public class DeathMenu : MonoBehaviour {
 	}
 
 	public void ReturnToMain(){
-		Application.LoadLevel (mainMenuLevel);
+		if (FindObjectOfType<UserData> ()) {
+			FindObjectOfType<GameManager> ().SendScore ();
+		}
+		UnityEngine.SceneManagement.SceneManager.LoadScene (mainMenuLevel);
 	}
 
 

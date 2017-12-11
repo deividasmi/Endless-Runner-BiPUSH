@@ -69,8 +69,11 @@
      <Compile Include="Assets\Scripts\Registration.cs" />
      <Compile Include="Assets\Scripts\ReportMenu.cs" />
      <Compile Include="Assets\Scripts\ScoreManager.cs" />
+     <Compile Include="Assets\Scripts\ScoreMenu.cs" />
      <Compile Include="Assets\Scripts\ScrollingBackground.cs" />
      <Compile Include="Assets\Scripts\UserData.cs" />
+     <None Include="Assets\UI Elements\Fonts\Jupiter\LICENSE.txt" />
+     <None Include="Assets\UI Elements\SF UI\Background\LICENSE.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

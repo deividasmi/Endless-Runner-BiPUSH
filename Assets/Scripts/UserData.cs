@@ -15,7 +15,7 @@ public class UserData : MonoBehaviour {
 	// Use this for initialization
 	public void SaveData () {
 		theLoginMenu = FindObjectOfType<LoginMenu> ();
-//		userID = theLoginMenu.userID;
+		userID = theLoginMenu.userID;
 		userName = theLoginMenu.userName;
 		isTester = theLoginMenu.isTester;
 		isLogedIn = theLoginMenu.isLogedIn;

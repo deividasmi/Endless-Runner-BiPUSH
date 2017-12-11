@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class Registration : MonoBehaviour {
 
-	private string registrationURL = "http://localhost/Endless_Runner/registration.php";
-
-	public InputField name;
+	//private string registrationURL = "http://localhost/Endless_Runner/registration.php";
+    private string registrationURL = "http://193.219.91.103:3089/registration.php";
+    public InputField UserName;
 	public InputField password;
 	public InputField repeatPassword;
 	public InputField email;
@@ -21,7 +21,7 @@ public class Registration : MonoBehaviour {
 		checkPassword ();
 		if (status) {
 			Debug.Log ("true");
-			StartCoroutine (registerUser (name.text, password.text, email.text));
+			StartCoroutine (registerUser (UserName.text, password.text, email.text));
 		}
 
 	}
@@ -46,14 +46,16 @@ public class Registration : MonoBehaviour {
 	}
 
 	IEnumerator registerUser (string name, string password, string email){
-		WWWForm form = new WWWForm ();
+      
+
+        WWWForm form = new WWWForm ();
 		form.AddField ("namePost", name);
 		form.AddField ("passwordPost", password);
 		form.AddField ("emailPost", email);
-
+        
 		WWW www = new WWW (registrationURL, form);
 		yield return www;
-		statusText.text = www.text;
+		statusText.text = www.text + "\n You can now login";
 		Debug.Log (www.text);
 
 	}

@@ -23,7 +23,7 @@ public class PlayerControler : MonoBehaviour {
 
 	public bool grounded;
 	public LayerMask whatIsGround;
-	private Collider2D myCollider;
+	//private Collider2D myCollider; not needed anymore
 	private Animator myAnimator;
 
 	public Transform groundPos;
@@ -35,8 +35,7 @@ public class PlayerControler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		myRigidBody = GetComponent<Rigidbody2D> ();
-		myCollider = GetComponent<Collider2D> ();
+        myRigidBody = GetComponent<Rigidbody2D>();
 		myAnimator = GetComponent<Animator> ();
 		jumpTimeCounter = jumpTime;
 		speedMilestoneCount = speedMilestone;
@@ -51,7 +50,7 @@ public class PlayerControler : MonoBehaviour {
 	void Update () {
 
 		//grounded = Physics2D.IsTouchingLayers (myCollider, whatIsGround);
-		grounded = Physics2D.OverlapCircle (new Vector2(groundPos.position.x, groundPos.position.y),0.75f,whatIsGround.value);
+		grounded = Physics2D.OverlapCircle (new Vector2(groundPos.position.x, groundPos.position.y),0.5f,whatIsGround.value);
 	
 		if (transform.position.x > speedMilestoneCount) {
 			speedMilestoneCount += speedMilestone;
@@ -62,7 +61,7 @@ public class PlayerControler : MonoBehaviour {
 		myRigidBody.velocity = new Vector2 (moveSpeed, myRigidBody.velocity.y);
 
 		//jumping and double junping
-		if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) ){
+		if((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()){
 			if (grounded) {
 				myRigidBody.velocity = new Vector2 (myRigidBody.velocity.x, jumpForce);
 				stoppedJumping = false; //jump fix 1.1

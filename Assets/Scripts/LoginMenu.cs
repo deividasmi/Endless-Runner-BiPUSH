@@ -11,17 +11,26 @@ public class LoginMenu : MonoBehaviour {
 	public InputField inputName;
 	public InputField inputPassword;
 	public Text stateText;
-	private string loginURL = "http://localhost/Endless_Runner/loginUser.php";
-	private string userDataURL = "http://localhost/Endless_Runner/userData.php";
-	public bool isLogedIn;
+	//private string loginURL = "http://localhost/Endless_Runner/loginUser.php";
+    private string loginURL = "http://193.219.91.103:3089/loginUser.php";
+    //private string userDataURL = "http://localhost/Endless_Runner/userData.php";
+    private string userDataURL = "http://193.219.91.103:3089/userData.php";
+    public bool isLogedIn;
 	public bool isTester;
 	public int userID;
 	public string userName;
 	private UserData theUserData;
 
+    public void Start()
+    {
+        theUserData = FindObjectOfType<UserData>();
+    }
 
 	public void SkipMenu(){
-		Application.LoadLevel (mainMenuLevel);
+        //Loadina scena, taip pat kaip application.load tik sitas metodas nedeprecated ir warningu nemes
+		UnityEngine.SceneManagement.SceneManager.LoadScene (mainMenuLevel);
+		theUserData.SaveData ();
+		DontDestroyOnLoad (theUserData);
 	}
 
 	public void RegistrationMenu (){
@@ -37,23 +46,17 @@ public class LoginMenu : MonoBehaviour {
 	public void onClickLogind(){
 		StartCoroutine (LoginUser (inputName.text,inputPassword.text));
 		StartCoroutine (GetUserData (inputName.text, inputPassword.text));
-		theUserData = FindObjectOfType<UserData> ();
 		theUserData.SaveData ();
 		DontDestroyOnLoad (theUserData);
+        stateText.text = "Logging in... Please wait";
+        Invoke("logInState",1f);
+		
+
+	}
+	void logInState() {
 		if (isLogedIn) {
 			SkipMenu ();
 		}
-
-	}
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	IEnumerator GetUserData(string name, string password){
@@ -62,9 +65,9 @@ public class LoginMenu : MonoBehaviour {
 		form.AddField ("passwordPost",password);
 		WWW www = new WWW (userDataURL, form);
 		yield return www;
-		//Debug.Log (www.text);
 		parseData (www.text);
-	}
+
+    }
 
 	private void parseData(string dataString){
 		string[] data = dataString.Split ('|');
@@ -82,16 +85,18 @@ public class LoginMenu : MonoBehaviour {
 		form.AddField ("passwordPost",password);
 
 		WWW www = new WWW (loginURL, form);
-		yield return www;
+        yield return www;
 		stateText.text = www.text;
-		//Debug.Log (www.text);
 		if(www.text == "Login success"){
+            stateText.color = Color.green;
 			isLogedIn = true;
 			userName = name;
 		}else{
 			isLogedIn = false;
+            stateText.color = Color.red;
 		}
+       
 
-	}
+    }
 
 }
